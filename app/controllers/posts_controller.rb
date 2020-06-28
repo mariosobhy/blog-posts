@@ -15,7 +15,9 @@ class PostsController < ApplicationController
 
   # POST /posts
   def create
-    @post = Post.new(post_params)
+    @post = Post.new(title: post_params[:title], body: post_params[:body])
+    @post.tags.build(post_params[:tags_attributes]) if post_params[:tags_attributes]
+    @post.comments.build(post_params[:comments_attributes]) if post_params[:comments_attributes]
     @post.author = current_user
 
     if @post.save
@@ -44,9 +46,8 @@ class PostsController < ApplicationController
     def set_post
       @post = Post.find(params[:id])
     end
-
     # Only allow a trusted parameter "white list" through.
     def post_params
-      params.fetch(:post, {})
+      params.require(:post).permit(:title, :body, :author_id, tags_attributes: [:id, :name], comments_attributes: [:id, :text, :commenter_id])
     end
 end

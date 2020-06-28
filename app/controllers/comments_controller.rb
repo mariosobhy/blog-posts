@@ -17,9 +17,10 @@ class CommentsController < ApplicationController
   # POST /comments
   def create
     @comment = Comment.new(comment_params)
-
+    @comment.post = @post
+    @comment.commenter = current_user
     if @comment.save
-      render json: @comment, status: :created, location: @comment
+      render json: @comment, status: :created, location: post_comments_url(@comment)
     else
       render json: @comment.errors, status: :unprocessable_entity
     end
@@ -51,6 +52,6 @@ class CommentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def comment_params
-      params.fetch(:comment, {})
+      params.require(:comment).permit(:text, :commenter_id, :post_id)
     end
 end

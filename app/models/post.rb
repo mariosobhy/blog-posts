@@ -3,6 +3,9 @@ class Post < ApplicationRecord
   has_many :tags, dependent: :destroy
   belongs_to :author, class_name: 'User'
 
+  accepts_nested_attributes_for :comments, :allow_destroy => true
+  accepts_nested_attributes_for :tags, :allow_destroy => true
+
   #validations 
   validates_presence_of :title, :body, :author_id
   validate :at_least_one_tag
