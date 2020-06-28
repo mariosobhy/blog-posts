@@ -2,7 +2,7 @@
 FactoryBot.define do
     factory :comment do
       text { Faker::Lorem.word }
-      commenter_id nil
-      post_id nil
+      association :commenter, factory: :user
+      post
     end
   end
