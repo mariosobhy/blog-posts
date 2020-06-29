@@ -6,7 +6,7 @@ ruby '2.7.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.2', '>= 6.0.2.2'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.4'
+#gem 'sqlite3', '~> 1.4'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -49,7 +49,7 @@ group :test do
   gem 'faker'
   gem 'database_cleaner'
 end
-
+gem 'mysql2', '~> 0.5.2'
 gem 'jwt'
 gem 'simple_command'
 gem 'sidekiq', '~> 5.0', '>= 5.0.5'
@@ -57,6 +57,6 @@ gem 'redis-rails'
 gem "sidekiq-scheduler"
 gem 'e2mmap'
 gem 'thwait'
-
+gem 'dotenv-rails'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
