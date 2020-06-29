@@ -1,25 +1,47 @@
 version: '3'
 services:
   db:
-    image: mysql:latest
+    image: mysql:5.7
     restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - db_data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpw
-      MYSQL_DATABASE: development
-      MYSQL_USER: root
-      MYSQL_PASSWORD: mariosobhy
-    ports: 
-        - "3307:3306"  
+      MYSQL_DATABASE: blog_development  
+
+  redis:
+    image: 'redis:5-alpine'
+    command: redis-server
+    ports:
+      - '6380:6379'
+    volumes:
+      - 'redis:/data'
+
+  sidekiq:
+    depends_on:
+      - 'db'
+      - 'redis'
+    build: .
+    command: bundle exec sidekiq
+    volumes:
+      - '.:/blog-posts'
+      - '/blog-posts/tmp' # don't mount tmp directory
+    env_file:
+      - '.env'
+
   web:
     build: .
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0' -e ${RAILS_ENV}"
     volumes:
       - .:/blog-posts
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      - 'db'
+      - 'redis'
     tty: true
     stdin_open: true
+
 volumes:
-  pgdata:
+  db_data: {}
+  redis:
