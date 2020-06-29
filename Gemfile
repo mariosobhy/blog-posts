@@ -32,6 +32,10 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.5'
 end
 
+group :production do 
+  gem 'redis-rack-cache'
+end 
+
 group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
@@ -48,6 +52,11 @@ end
 
 gem 'jwt'
 gem 'simple_command'
+gem 'sidekiq', '~> 5.0', '>= 5.0.5'
+gem 'redis-rails'
+gem "sidekiq-scheduler"
+gem 'e2mmap'
+gem 'thwait'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
