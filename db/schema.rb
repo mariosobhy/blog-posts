@@ -12,7 +12,10 @@
 
 ActiveRecord::Schema.define(version: 2020_06_28_211845) do
 
-  create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "comments", force: :cascade do |t|
     t.string "text"
     t.bigint "commenter_id"
     t.bigint "post_id"
@@ -22,7 +25,7 @@ ActiveRecord::Schema.define(version: 2020_06_28_211845) do
     t.index ["post_id"], name: "index_comments_on_post_id"
   end
 
-  create_table "posts", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "posts", force: :cascade do |t|
     t.string "title"
     t.string "body"
     t.bigint "author_id"
@@ -31,7 +34,7 @@ ActiveRecord::Schema.define(version: 2020_06_28_211845) do
     t.index ["author_id"], name: "index_posts_on_author_id"
   end
 
-  create_table "tags", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "tags", force: :cascade do |t|
     t.string "name"
     t.bigint "post_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -39,7 +42,7 @@ ActiveRecord::Schema.define(version: 2020_06_28_211845) do
     t.index ["post_id"], name: "index_tags_on_post_id"
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
     t.string "password_digest"
