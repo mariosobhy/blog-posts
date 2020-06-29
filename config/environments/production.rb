@@ -12,7 +12,11 @@ Rails.application.configure do
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
-
+  config.cache_store = :redis_store, "redis://localhost:6379/0/cache", { expires_in: 90.minutes }
+  config.action_dispatch.rack_cache = {
+    metastore: "redis://localhost:6379/1/metastore",
+    entitystore: "redis://localhost:6379/1/entitystore"
+  }
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
   # config.require_master_key = true
