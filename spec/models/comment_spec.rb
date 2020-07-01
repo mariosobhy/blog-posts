@@ -7,7 +7,7 @@ RSpec.describe Comment, type: :model do
   it { should belong_to(:commenter) }
   # Validation test
   # ensure column name is present before saving
-  it { should validate_presence_of(:texet) }
+  it { should validate_presence_of(:text) }
   it { should validate_presence_of(:commenter_id) }
   it { should validate_presence_of(:post_id) }
 end

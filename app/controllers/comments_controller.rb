@@ -20,7 +20,7 @@ class CommentsController < ApplicationController
     @comment.post = @post
     @comment.commenter = current_user
     if @comment.save
-      render json: @comment, status: :created, location: post_comments_url(@comment)
+      render json: @comment, status: :created, location: post_comments_path(@comment)
     else
       render json: @comment.errors, status: :unprocessable_entity
     end

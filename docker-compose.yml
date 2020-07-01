@@ -26,8 +26,7 @@ services:
     volumes:
       - '.:/blog-posts'
       - '/blog-posts/tmp' # don't mount tmp directory
-    env_file:
-      - '.env'
+    
 
   web:
     build: .
