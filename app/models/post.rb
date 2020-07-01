@@ -12,7 +12,7 @@ class Post < ApplicationRecord
 
   #validations 
   validates_presence_of :title, :body, :author_id
-  #validate :at_least_one_tag
+  validate :at_least_one_tag
 
   private
   def destroy_post_after_24hours

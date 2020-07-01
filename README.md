@@ -3,22 +3,15 @@
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
-Things you may want to cover:
+## Things you may want to setup the project:
 
-* Ruby version
+* Install Docker and Docker Compose 
 
-* System dependencies
+* After that you will run `docker-compose up`
 
-* Configuration
+* In case you need to run the testing you will run `docker-compose run web bundle exec rspec`
 
-* Database creation
+## API Documentation: 
 
-* Database initialization
+* Here's a link of postman doucumentation [here](https://documenter.getpostman.com/view/910736/T17Dhpfy?version=latest)
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
