@@ -44,11 +44,13 @@ group :development do
 end
 
 group :test do
-  gem 'factory_bot_rails', '~> 4.0'
-  gem 'shoulda-matchers', '~> 3.1'
-  gem 'faker'
   gem 'database_cleaner'
+  gem 'factory_bot_rails', '~> 4.0'
+  gem 'faker'
+  gem 'shoulda-matchers', '~> 3.1'
+  gem 'rspec-sidekiq'
 end
+
 gem 'mysql2', '~> 0.5.2'
 gem 'jwt'
 gem 'simple_command'
@@ -59,5 +61,7 @@ gem "sidekiq-scheduler"
 gem 'e2mmap'
 gem 'thwait'
 gem 'dotenv-rails'
+gem 'devise-jwt', '~> 0.6.0'
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
