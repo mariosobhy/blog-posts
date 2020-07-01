@@ -9,6 +9,8 @@ application up and running.
 
 * After that you will run `docker-compose up`
 
+* In case the database not created you will need to run `docker-compose run web rails db:migrate` then `docker-compose run web rails db:seed`
+
 * In case you need to run the testing you will run `docker-compose run web bundle exec rspec`
 
 ## API Documentation: 
