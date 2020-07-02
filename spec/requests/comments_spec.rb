@@ -17,7 +17,7 @@ RSpec.describe "Comments", type: :request do
    
   # Initialize the test data
   let!(:post_item) { create(:post) }
-  let!(:comments) { create_list(:comment, 20) }
+  let!(:comments) { create_list(:comment, 20, post_id: post_item.id) }
   let(:post_id) { post_item.id }
   let(:id) { comments.first.id }
 
