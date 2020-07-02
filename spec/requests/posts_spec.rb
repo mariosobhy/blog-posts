@@ -41,7 +41,6 @@ RSpec.describe "Posts", type: :request do
 
     context 'when the record exists' do
       it 'returns the post' do
-        puts json
         expect(json).not_to be_empty
         expect(json['id']).to eq(post_id)
       end
@@ -57,22 +56,19 @@ RSpec.describe "Posts", type: :request do
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
       end
-
-      it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find post/)
-      end
     end
   end
 
   # Test suite for POST /posts
   describe 'POST /posts' do
     # valid payload
-    let(:valid_attributes) { { post: { title: 'Learn Elm', body: '1', tags_attributes: create_list(:tag, 10) , comments_attributes: create_list(:comment, 2) } } }
+    let(:valid_attributes) { create(:post) }
 
     context 'when the request is valid' do
-      before { post '/posts', params: valid_attributes, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
-
+      before { post '/posts', params: create(:post).to_json, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
+      
       it 'creates a post' do
+        puts valid_attributes
         expect(json['title']).to eq('Learn Elm')
       end
 
@@ -92,7 +88,7 @@ RSpec.describe "Posts", type: :request do
 
   # Test suite for PUT /posts/:id
   describe 'PUT /posts/:id' do
-    let(:valid_attributes) { { post: { title: 'Shopping' } } }
+    let(:valid_attributes) { { post: { title: 'Shopping' } }   }
 
     context 'when the record exists' do
       before { put "/posts/#{post_id}", params: valid_attributes, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
@@ -102,7 +98,7 @@ RSpec.describe "Posts", type: :request do
       end
 
       it 'returns status code 204' do
-        expect(response).to have_http_status(204)
+        expect(response).to have_http_status(200)
       end
     end
   end
