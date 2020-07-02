@@ -2,12 +2,27 @@ require 'rails_helper'
 
 RSpec.describe "Posts", type: :request do
   # initialize test data 
+  let(:user) { create(:user) }
+  let(:url) { '/authenticate' }
+  before do
+    post url, params: params
+  end
+
+  let(:token) { response.body }
+  let(:params) do
+    {
+      email: user.email,
+      password: user.password
+    }
+  end
+
   let!(:posts) { create_list(:post, 10) }
   let(:post_id) { posts.first.id }
 
   describe "GET /posts" do
+
     # make HTTP get request before each example
-    before { get '/posts' }
+    before { get '/posts', params: {}, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
 
     it 'returns posts' do
       # Note `json` is a custom helper to parse JSON responses
@@ -22,10 +37,11 @@ RSpec.describe "Posts", type: :request do
 
    # Test suite for GET /posts/:id
    describe 'GET /posts/:id' do
-    before { get "/posts/#{post_id}" }
+    before { get "/posts/#{post_id}", params: {}, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
 
     context 'when the record exists' do
       it 'returns the post' do
+        puts json
         expect(json).not_to be_empty
         expect(json['id']).to eq(post_id)
       end
@@ -51,10 +67,10 @@ RSpec.describe "Posts", type: :request do
   # Test suite for POST /posts
   describe 'POST /posts' do
     # valid payload
-    let(:valid_attributes) { { title: 'Learn Elm', body: '1' } }
+    let(:valid_attributes) { { post: { title: 'Learn Elm', body: '1', tags_attributes: create_list(:tag, 10) , comments_attributes: create_list(:comment, 2) } } }
 
     context 'when the request is valid' do
-      before { post '/posts', params: valid_attributes }
+      before { post '/posts', params: valid_attributes, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
 
       it 'creates a post' do
         expect(json['title']).to eq('Learn Elm')
@@ -66,25 +82,20 @@ RSpec.describe "Posts", type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/posts', params: { title: 'Foobar' } }
+      before { post '/posts', params: { post: { title: 'Foobar'} }, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
-      end
-
-      it 'returns a validation failure message' do
-        expect(response.body)
-          .to match(/Validation failed: Created by can't be blank/)
       end
     end
   end
 
   # Test suite for PUT /posts/:id
   describe 'PUT /posts/:id' do
-    let(:valid_attributes) { { title: 'Shopping' } }
+    let(:valid_attributes) { { post: { title: 'Shopping' } } }
 
     context 'when the record exists' do
-      before { put "/posts/#{post_id}", params: valid_attributes }
+      before { put "/posts/#{post_id}", params: valid_attributes, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
 
       it 'updates the record' do
         expect(response.body).to be_empty
@@ -98,7 +109,7 @@ RSpec.describe "Posts", type: :request do
 
   # Test suite for DELETE /posts/:id
   describe 'DELETE /posts/:id' do
-    before { delete "/posts/#{post_id}" }
+    before { delete "/posts/#{post_id}", headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
