@@ -4,17 +4,18 @@ RSpec.describe "Posts", type: :request do
   # initialize test data 
   let(:user) { create(:user) }
   let(:url) { '/authenticate' }
-  before do
-    post url, params: params
-  end
-
-  let(:token) { response.body }
   let(:params) do
     {
       email: user.email,
       password: user.password
     }
   end
+  before do
+    post url, params: params
+  end
+
+  let(:token) { response.body }
+ 
 
   let!(:posts) { create_list(:post, 10) }
   let(:post_id) { posts.first.id }

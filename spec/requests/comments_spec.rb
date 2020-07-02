@@ -1,14 +1,28 @@
 require 'rails_helper'
 
 RSpec.describe "Comments", type: :request do
-    # Initialize the test data
-    let!(:post) { create(:post) }
-    let!(:comments) { create_list(:comment, 20, post_id: post.id) }
-    let(:post_id) { post.id }
-    let(:id) { comments.first.id }
+  # initialize test data 
+  let(:user) { create(:user) }
+  let(:url) { '/authenticate' }
+  let(:params) do
+    {
+      email: user.email,
+      password: user.password
+    }
+  end
+  before do
+    post url, params: params
+  end
+  let(:token) { response.body }
+   
+  # Initialize the test data
+  let!(:post_item) { create(:post) }
+  let!(:comments) { create_list(:comment, 20) }
+  let(:post_id) { post_item.id }
+  let(:id) { comments.first.id }
 
     describe 'GET /posts/:post_id/comments' do
-      before { get "/posts/#{post_id}/comments" }
+      before { get "/posts/#{post_id}/comments", params: {}, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
   
       context 'when post exists' do
         it 'returns status code 200' do
@@ -35,7 +49,7 @@ RSpec.describe "Comments", type: :request do
   
     # Test suite for GET /posts/:post_id/comments/:id
     describe 'GET /posts/:post_id/comments/:id' do
-      before { get "/posts/#{post_id}/comments/#{id}" }
+      before { get "/posts/#{post_id}/comments/#{id}", params: {}, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
   
       context 'when post comment exists' do
         it 'returns status code 200' do
@@ -65,7 +79,7 @@ RSpec.describe "Comments", type: :request do
       let(:valid_attributes) { { latitude: 30.2156, longitude: 31.562 } }
   
       context 'when request attributes are valid' do
-        before { post "/posts/#{post_id}/comments", params: valid_attributes }
+        before { post "/posts/#{post_id}/comments", params: valid_attributes, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
   
         it 'returns status code 201' do
           expect(response).to have_http_status(201)
@@ -73,15 +87,12 @@ RSpec.describe "Comments", type: :request do
       end
   
       context 'when an invalid request' do
-        before { post "/posts/#{post_id}/comments", params: {} }
+        before { post "/posts/#{post_id}/comments", params: {}, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
   
         it 'returns status code 422' do
           expect(response).to have_http_status(422)
         end
   
-        it 'returns a failure message' do
-          expect(response.body).to match(/Validation failed: Latitude can't be blank/)
-        end
       end
     end
   
@@ -89,7 +100,7 @@ RSpec.describe "Comments", type: :request do
     describe 'PUT /posts/:post_id/comments/:id' do
       let(:valid_attributes) { { latitude: 30.6656 } }
   
-      before { put "/posts/#{post_id}/comments/#{id}", params: valid_attributes }
+      before { put "/posts/#{post_id}/comments/#{id}", params: valid_attributes, headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
   
       context 'when comment exists' do
         it 'returns status code 204' do
@@ -117,7 +128,7 @@ RSpec.describe "Comments", type: :request do
   
     # Test suite for DELETE /posts/:id
     describe 'DELETE /posts/:id' do
-      before { delete "/posts/#{post_id}/comments/#{id}" }
+      before { delete "/posts/#{post_id}/comments/#{id}", headers: { 'Authorization': JSON.parse(token)['auth_token'] } }
   
       it 'returns status code 204' do
         expect(response).to have_http_status(204)
