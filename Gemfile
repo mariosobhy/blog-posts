@@ -55,7 +55,7 @@ gem 'mysql2', '~> 0.5.2'
 gem 'jwt'
 gem 'simple_command'
 gem 'pg', '~> 0.18.4'
-gem 'sidekiq', '~> 5.0', '>= 5.0.5'
+gem 'sidekiq', '~> 6.4'
 gem 'redis-rails'
 gem "sidekiq-scheduler"
 gem 'e2mmap'
